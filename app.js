@@ -1,18 +1,22 @@
 // setting up the module
 var app = angular.module('newsApp', []);
 
+// factory to hold post elements 
+app.factory('posts', [function(){
+	var p = {
+		posts: []
+	};
+	return p;
+}]);
+
 // creating a new controller
-app.controller('MainController', 
-	['$scope', 
-	function($scope){
+app.controller('MainController', [
+	'$scope',
+	// injecting the factory service
+	'posts',
+	function($scope, posts){
 		// list of posts with title and upvotes elements
-		$scope.posts = [
-			{title: 'post 1', upvotes: 5},
-			{title: 'post 2', upvotes: 2},
-			{title: 'post 3', upvotes: 6},
-			{title: 'post 4', upvotes: 10},
-			{title: 'post 5', upvotes: 21}
-			];
+		$scope.posts = posts.posts;
 
 		$scope.addPost = function(){
 			// add a post iff the title exists and is non-empty
