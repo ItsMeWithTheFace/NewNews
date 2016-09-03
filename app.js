@@ -2,17 +2,24 @@
 var app = angular.module('newsApp', []);
 angular.module('newsApp', ['ui.router'])
 
-// setting up home state in this config block
+// setting up states in this config block
 app.config([
 	'$stateProvider',
 	'$urlRouterProvider',
 	function($stateProvider, $urlRouterProvider) {
 
-		$stateProvider.state('home', {
+		$stateProvider
+		.state('home', {				// home state
 			url:'/home',
 			templateUrl: '/home.html',
 			controller: 'MainController'
-			});
+		});
+
+		.state('posts', {				// posts state
+			url: '/posts/{id}',
+			templateUrl: '/posts.html',
+			controller: 'PostsController'
+		});
 
 		$urlRouterProvider.otherwise('home');	// for unspecified routes
 	}
@@ -26,11 +33,10 @@ app.factory('posts', [function(){
 	return p;
 }]);
 
-// creating a new controller
+// controller for the home state
 app.controller('MainController', [
 	'$scope',
-	// injecting the factory service
-	'posts',
+	'posts',	// injecting the 'posts' factory service
 	function($scope, posts){
 		// list of posts with title and upvotes elements
 		$scope.posts = posts.posts;
@@ -41,7 +47,13 @@ app.controller('MainController', [
 			$scope.posts.push({
 				title: $scope.title,
 				link: $scope.link,
-				upvotes: 0});
+				upvotes: 0,
+				// mock comment data to check if routing works
+				comments: [
+					{author: 'Billy', body: 'Nice', upvotes: 0},
+					{author: 'Jimmy', body: 'Good work', upvotes: 0}
+				]
+			});
 			$scope.title='';
 			$scope.link='';
 		};
@@ -51,4 +63,14 @@ app.controller('MainController', [
 			post.upvotes += 1;
 		};
 	}
-	]);
+]);
+
+// controller for the posts state
+app.controller('PostsController', [
+	'$scope',
+	'$stateParams',
+	'posts',	// dependency injection of 'posts' service
+	function($scope, $stateParams, posts) {
+		$scope.posts = posts.posts[$stateParams.id];
+	}
+]);
