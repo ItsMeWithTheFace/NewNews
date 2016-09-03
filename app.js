@@ -1,5 +1,22 @@
-// setting up the module
+// setting up the module with ui-router
 var app = angular.module('newsApp', []);
+angular.module('newsApp', ['ui.router'])
+
+// setting up home state in this config block
+app.config([
+	'$stateProvider',
+	'$urlRouterProvider',
+	function($stateProvider, $urlRouterProvider) {
+
+		$stateProvider.state('home', {
+			url:'/home',
+			templateUrl: '/home.html',
+			controller: 'MainController'
+			});
+
+		$urlRouterProvider.otherwise('home');	// for unspecified routes
+	}
+]);
 
 // factory to hold post elements 
 app.factory('posts', [function(){
