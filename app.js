@@ -71,6 +71,18 @@ app.controller('PostsController', [
 	'$stateParams',
 	'posts',	// dependency injection of 'posts' service
 	function($scope, $stateParams, posts) {
+		// list of posts with an id from stateParams
 		$scope.posts = posts.posts[$stateParams.id];
+
+		// adds a comment to post iff it is non-empty
+		$scope.addComment = function(){
+			if($scope.body === '') { return; }
+			$scope.post.coments.push({
+				body: $scope.body,
+				author: 'user',
+				upvotes: 0
+			});
+			$scope.body = '';
+		};
 	}
 ]);
