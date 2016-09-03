@@ -2,24 +2,25 @@
 	<head>
 		<title>NewsApp</title>
 
-		<!--calling the bootstrap and angular dependancies-->
+		<!--calling the bootstrap, and angular dependancies-->
 		<link href="./bootstrap/css/bootstrap.min.css" rel="stylesheet">
 
+		<script src="./angular-ui-router.js"></script>
 		<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular.min.js"></script>
 		<script src="app.js"></script>
 		<style> .glyphicon-thumbs-up { cursor:pointer } </style>
 	</head>
 
-	<!--calling the Angular module and controller located in app.js-->
-	<body ng-app="newsApp" ng-controller="MainController">
+	<!--calling the Angular module located in app.js-->
+	<body ng-app="newsApp">
 
 		<!--using grid class "row" to automatically centre the application-->
 		<div class="row">
 			<div class="col-md-6 col-md-offset-3">
-
-				<div class="page-header">
-					<h1>NewNews</h1>
-				</div>
+				<!--rendering of template-->
+				<ui-view></ui-view>
+			</div>
+		</div>
 
 				<!--have the upvoting clickable element be a thumbs up sprite-->
 				<div ng-repeat="post in posts | orderBy: '-upvotes'">
@@ -44,7 +45,7 @@
 
 				 	<!--first form takes in any text-->
 				 	<div class="form-group">
-						<input type="text" 
+						<input type="text"
 						class="form-control"
 						placeholder="Title" 
 						ng-model="title"></input>
@@ -61,7 +62,11 @@
 					<button type="submit" class="btn btn-danger">Post</button>
 				</form>
 
+		<script type="text/ng-template" id="/home.html">
+			<div class="page-header">
+				<h1>NewNews</h1>
 			</div>
-		</div>
+
+		</script>
 	</body>
 </html>
