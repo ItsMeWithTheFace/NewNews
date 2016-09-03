@@ -1,6 +1,5 @@
 // setting up the module with ui-router
-var app = angular.module('newsApp', []);
-angular.module('newsApp', ['ui.router'])
+var app = angular.module('newsApp', ['ui.router']);
 
 // setting up states in this config block
 app.config([
