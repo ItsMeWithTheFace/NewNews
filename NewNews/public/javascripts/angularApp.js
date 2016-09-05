@@ -11,7 +11,12 @@ app.config([
 		.state('home', {				// home state
 			url:'/home',
 			templateUrl: '/home.html',
-			controller: 'MainController'
+			controller: 'MainController',
+			resolve: {					// ensures posts are loaded
+				postPromise: ['posts', function(posts){
+					return posts.getAll();
+				}]
+			}
 		});
 
 		.state('posts', {				// posts state
@@ -24,11 +29,20 @@ app.config([
 	}
 ]);
 
-// factory to hold post elements 
-app.factory('posts', [function(){
+// posts service (for handling view of posts)
+app.factory('posts', ['$http', function($http){
 	var p = {
 		posts: []
 	};
+
+	// returns the post service itself
+	p.getAll = function() {
+		return $http.get('/posts').success(function(data){
+			angular.copy(data, p.posts);	// deep copy of returned data
+											// ensures new data reflected in view
+		});
+	};
+
 	return p;
 }]);
 
