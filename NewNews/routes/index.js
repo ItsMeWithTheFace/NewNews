@@ -89,7 +89,7 @@ router.put('/posts/:post/comments/:comment/upvote', function(req, res, next) {
 
 /* middleware function to retrieve comments specified by
 the :comment route parameter */
-router.param('/posts/:post/comments/:comment', function(req, res, next, id) {
+router.param('comment', function(req, res, next, id) {
 	var query = Comment.findById(id);
 
 	query.exec(function(err, comment) {
