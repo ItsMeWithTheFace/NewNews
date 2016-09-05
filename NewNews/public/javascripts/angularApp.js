@@ -43,9 +43,18 @@ app.factory('posts', ['$http', function($http){
 		});
 	};
 
+	// creates a post
 	p.create = function(post) {
 		return $http.post('/posts', post).success(function(data){
 			p.posts.push(data);
+		});
+	};
+
+	// upvotes a post
+	p.upvote = function(post) {
+		return $http.put('/posts/' + post._id + '/upvote')
+		.success(function(data){
+			post.upvotes += 1;
 		});
 	};
 
@@ -73,7 +82,7 @@ app.controller('MainController', [
 
 		// function to increase upvotes; requires a post element
 		$scope.incrementUpvotes = function(post) {
-			post.upvotes += 1;
+			posts.upvote(post);
 		};
 	}
 ]);
