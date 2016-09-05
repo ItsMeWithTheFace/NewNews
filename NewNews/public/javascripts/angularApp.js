@@ -43,6 +43,12 @@ app.factory('posts', ['$http', function($http){
 		});
 	};
 
+	p.create = function(post) {
+		return $http.post('/posts', post).success(function(data){
+			p.posts.push(data);
+		});
+	};
+
 	return p;
 }]);
 
@@ -57,15 +63,9 @@ app.controller('MainController', [
 		$scope.addPost = function(){
 			// add a post iff the title exists and is non-empty
 			if(!$scope.title || $scope.title === '') { return; }
-			$scope.posts.push({
+			posts.create({			// created posts get saved to server
 				title: $scope.title,
 				link: $scope.link,
-				upvotes: 0,
-				// mock comment data to check if routing works
-				comments: [
-					{author: 'Billy', body: 'Nice', upvotes: 0},
-					{author: 'Jimmy', body: 'Good work', upvotes: 0}
-				]
 			});
 			$scope.title='';
 			$scope.link='';
