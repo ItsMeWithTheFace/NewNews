@@ -22,7 +22,12 @@ app.config([
 		.state('posts', {				// posts state
 			url: '/posts/{id}',
 			templateUrl: '/posts.html',
-			controller: 'PostsController'
+			controller: 'PostsController',
+			resolve: {
+				post: ['$stateParams', 'posts', function($stateParams, posts) {
+					return posts.get($stateParams.id);
+				}]
+			}
 		});
 
 		$urlRouterProvider.otherwise('home');	// for unspecified routes
@@ -55,6 +60,27 @@ app.factory('posts', ['$http', function($http){
 		return $http.put('/posts/' + post._id + '/upvote')
 		.success(function(data){
 			post.upvotes += 1;
+		});
+	};
+
+	// retrieves a single post from the server
+	p.get = function(id) {
+		return $http.get('/posts/' + id).then(function(res){
+			return res.data;
+		});
+	};
+
+
+	//add comment to a post
+	p.addComment = function(id, comment) {
+		return $http.post('/posts/' + id + '/comments', comment);
+	};
+
+	//upvote comments in a particular post
+	p.upvoteComment = function(post, comment) {
+		return $http.put('/posts/' + post._id + '/comments/' + comment._id + '/upvote')
+		.success(function(data){
+			comment.upvotes += 1;
 		});
 	};
 
@@ -92,19 +118,26 @@ app.controller('PostsController', [
 	'$scope',
 	'$stateParams',
 	'posts',	// dependency injection of 'posts' service
-	function($scope, $stateParams, posts) {
-		// list of posts with an id from stateParams
-		$scope.posts = posts.posts[$stateParams.id];
+	'post',		// dependency injection of a single retrieved post
+	function($scope, posts, post) {
+		// list of posts with an id
+		$scope.posts = post;
 
 		// adds a comment to post iff it is non-empty
 		$scope.addComment = function(){
 			if($scope.body === '') { return; }
-			$scope.post.coments.push({
+			posts.addComment(post._id, {	// uses the addComment of the injected posts service
 				body: $scope.body,
 				author: 'user',
-				upvotes: 0
+			}).success(function(comment) {
+				$scope.post.comments.push(comment);
 			});
 			$scope.body = '';
+		};
+
+		// enable upvoting of comments
+		$scope.incrementUpvotes = function(comment){
+			posts.upvoteComment(post, comment);
 		};
 	}
 ]);
