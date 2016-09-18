@@ -30,6 +30,28 @@ app.config([
 			}
 		});
 
+		.state('login', {				// login state
+			url: '/login',
+			templateUrl: '/login.html',
+			controller: 'AuthController',
+			onEnter: ['$state', 'auth', function($state, auth){
+				if(auth.isLoggedIn()){
+					$state.go('home');
+				}
+			}]
+		})
+
+		.state('register', {			// registeration state
+			url: '/register',
+			templateUrl: '/register.html',
+			controller: 'AuthController',
+			onEnter: ['$state', 'auth', function($state, auth){
+				if(auth.isLoggedIn()){
+					$state.go('home');
+				}
+			}]
+		});
+
 		$urlRouterProvider.otherwise('home');	// for unspecified routes
 	}
 ]);
