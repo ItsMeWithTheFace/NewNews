@@ -144,7 +144,7 @@ app.factory('auth', ['$http', '$window', function($http, $window){
 	};
 
 	return auth;
-}])
+}]);
 
 
 
@@ -202,3 +202,31 @@ app.controller('PostsController', [
 		};
 	}
 ]);
+
+// controller for the login and register page
+app.controller('AuthController', [
+	'$scope',
+	'$state',
+	'auth',
+	function($scope, $state, auth){
+		$scope.user = {};
+
+		// registers a user by calling the auth service
+		$scope.register = function(){
+			auth.register($scope.user).error(function(error){
+				$scope.error = error;
+			}).then(function(){
+				$state.go('home');
+			});
+		};
+
+		// lets a user log in by calling auth service
+		$scope.logIn = function(){
+			auth.logIn($scope.user).error(function(error){
+				$scope.error = error;
+			}).then(function(){
+				$state.go('home');
+			});
+		};
+	}])
+
