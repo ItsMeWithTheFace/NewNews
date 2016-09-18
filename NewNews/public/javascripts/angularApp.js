@@ -87,6 +87,67 @@ app.factory('posts', ['$http', function($http){
 	return p;
 }]);
 
+// authentication service
+app.factory('auth', ['$http', '$window', function($http, $window){
+	var auth = {};
+
+	// sets a token into localStorage
+	auth.saveToken = function (token){
+		$window.localStorage['newnews-news-token'] = token;
+	};
+
+	// gets a token
+	auth.getToken = function (){
+		return $window.localStorage['newnews-news-token'];
+	}
+
+	// returns true iff user is logged in
+	auth.isLoggedIn = function(){
+		var token = auth.getToken();
+
+		if(token){
+			var payload = JSON.parse($window.atob(token.split('.')[1]));
+
+			return payload.exp > Date.now() / 1000;
+		} else {
+			return false;
+		}
+	};
+
+	// returns the username of the current logged in user
+	auth.currentUser = function(){
+		if(auth.isLoggedIn()){
+			var token = auth.getToken();
+			var payload = JSON.parse($window.atob(token.split('.')[1]));
+
+			return payload.username;
+		}
+	};
+
+	// posts user to /register route and saves the token returned
+	auth.register = function(user){
+		return $http.post('/register', user).success(function(data){
+			auth.saveToken(data.token);
+		});
+	};
+
+	// posts user to login route and save the token returned
+	auth.logIn = function(user){
+		return $http.post('/login', user).success(function(data){
+			auth.saveToken(data.token);
+		});
+	};
+
+	// removes the user's token from localStorage, logging them out
+	auth.logOut = function(){
+		$window.localStorage.removeItem('newnews-news-token');
+	};
+
+	return auth;
+}])
+
+
+
 // controller for the home state
 app.controller('MainController', [
 	'$scope',
