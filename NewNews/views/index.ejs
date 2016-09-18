@@ -13,6 +13,14 @@
 
 	<!--calling the Angular module located in app.js-->
 	<body ng-app="newsApp">
+		<nav class="navbar navbar-default pull-right" ng-controller="NavController">
+			<ul class="nav navbar-nav">
+				<li ng-show="isLoggedIn()"><a>{{ currentUser }}</a></li>
+				<li ng-show="isLoggedIn()"><a href="" ng-click="logOut()">Log Out</a></li>
+				<li ng-show="isLoggedIn()"><a href="/#/login">Log In</a></li>
+				<li ng-show="isLoggedIn()"><a href="/#/register">Register</a></li>
+			</ul>
+		</nav>
 
 		<!--using grid class "row" to automatically centre the application-->
 		<div class="row">
