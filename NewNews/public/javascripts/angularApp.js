@@ -183,6 +183,7 @@ app.controller('MainController', [
 	function($scope, posts){
 		// list of posts with title and upvotes elements
 		$scope.posts = posts.posts;
+		$scope.isLoggedIn = auth.isLoggedIn;
 
 		$scope.addPost = function(){
 			// add a post iff the title exists and is non-empty
@@ -211,6 +212,7 @@ app.controller('PostsController', [
 	function($scope, posts, post) {
 		// list of posts with an id
 		$scope.posts = post;
+		$scope.isLoggedIn = auth.isLoggedIn;
 
 		// adds a comment to post iff it is non-empty
 		$scope.addComment = function(){
