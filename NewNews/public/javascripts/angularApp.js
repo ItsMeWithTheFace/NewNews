@@ -57,7 +57,7 @@ app.config([
 ]);
 
 // posts service (for handling view of posts)
-app.factory('posts', ['$http', function($http){
+app.factory('posts', ['$http', 'auth', function($http, auth){
 	var p = {
 		posts: []
 	};
@@ -72,15 +72,18 @@ app.factory('posts', ['$http', function($http){
 
 	// creates a post
 	p.create = function(post) {
-		return $http.post('/posts', post).success(function(data){
+		return $http.post('/posts', post, {
+			headers: {Authorization: 'Bearer '+auth.getToken()}
+		}).success(function(data){
 			p.posts.push(data);
 		});
 	};
 
 	// upvotes a post
 	p.upvote = function(post) {
-		return $http.put('/posts/' + post._id + '/upvote')
-		.success(function(data){
+		return $http.put('/posts/' + post._id + '/upvote', null, {
+			headers: {Authorization: 'Bearer '+auth.getToken()}
+		}).success(function(data){
 			post.upvotes += 1;
 		});
 	};
@@ -95,13 +98,16 @@ app.factory('posts', ['$http', function($http){
 
 	//add comment to a post
 	p.addComment = function(id, comment) {
-		return $http.post('/posts/' + id + '/comments', comment);
+		return $http.post('/posts/' + id + '/comments', comment, {
+			headers: {Authorization: 'Bearer '+auth.getToken()}
+		});
 	};
 
 	//upvote comments in a particular post
 	p.upvoteComment = function(post, comment) {
-		return $http.put('/posts/' + post._id + '/comments/' + comment._id + '/upvote')
-		.success(function(data){
+		return $http.put('/posts/' + post._id + '/comments/' + comment._id + '/upvote', null, {
+			headers: {Authorization: 'Bearer '+auth.getToken()}
+		}).success(function(data){
 			comment.upvotes += 1;
 		});
 	};
