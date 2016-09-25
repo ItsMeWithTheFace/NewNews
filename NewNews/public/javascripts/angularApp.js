@@ -17,7 +17,7 @@ app.config([
 					return posts.getAll();
 				}]
 			}
-		});
+		})
 
 		.state('posts', {				// posts state
 			url: '/posts/{id}',
@@ -28,7 +28,7 @@ app.config([
 					return posts.get($stateParams.id);
 				}]
 			}
-		});
+		})
 
 		.state('login', {				// login state
 			url: '/login',
@@ -269,5 +269,6 @@ app.controller('NavController', [
 		$scope.isLoggedIn = auth.isLoggedIn;
 		$scope.currentUser = auth.currentUser;
 		$scope.logOut = auth.logOut;
-	}]);
+	}
+]);
 
