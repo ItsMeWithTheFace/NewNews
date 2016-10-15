@@ -117,13 +117,13 @@ router.post('/register', function(req, res, next){
 
 	user.username = req.body.username;
 
-	user.setPasswod(req.body.password)
+	user.setPassword(req.body.password)
 
 	user.save(function (err){
 		if(err){ return next(err); }
 
 		return res.json({token: user.generateJWT()})
-	}) ;
+	});
 });
 
 // authenticates a user and returns token to client
